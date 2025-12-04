@@ -1,0 +1,19 @@
+
+ARCHITECTURAL FEASIBILITY REPORT SUMMARY
+----------------------------------------
+
+Project Analysis Date: 2025-12-03 22:06:14
+Total Options Analyzed: 2
+
+1. EFFICENCY FINDINGS
+The analysis synthesized 2 project options. The most efficient option based on raw construction cost per square foot is:
+
+    OPTION NAME: B
+    AREA: 1,500,000 SQFT
+    TOTAL COST: $4.50 Million
+    COST PER SQFT: $3
+
+2. ZONING NOTE
+The efficient option (B) utilizes 75.0% of the site coverage allowance.
+*For a full visual assessment of all options and constraints, see feasibility_plot.png.*
+
