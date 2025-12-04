@@ -1,5 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
+from datetime import datetime
 
 # --- NEW INTERACTIVE USER INPUT SECTION ---
 print("\n--- Architectural Feasibility Data Entry ---")
@@ -41,6 +43,18 @@ df = pd.DataFrame(options)
 # This calculates the cost per square foot for each option.
 df['Cost_per_SQFT'] = (df['Cost_Millions'] * 1_000_000) / df['Area_SQFT']
 
+# --- REPORT ANALYSIS SECTION ---
+# 2.5 Find the most efficient option (Lowest Cost per SQFT)
+# idxmin() finds the index of the minimum value in the Cost_per_SQFT column
+best_option_row = df.loc[df['Cost_per_SQFT'].idxmin()]
+
+# Format the key values for the report
+best_cost = f"${best_option_row['Cost_Millions']:.2f} Million"
+best_sqft_cost = f"${best_option_row['Cost_per_SQFT']:,.0f}"
+
+# -----------------------------------
+
+
 # 3. Start plotting the data
 # We plot Cost Efficiency (Y-axis) vs. Area (X-axis).
 plt.figure(figsize=(10, 6))
@@ -73,3 +87,33 @@ for i, row in df.iterrows():
 # 5. Save the plot (Crucial step for Termux visualization)
 plt.savefig('feasibility_plot.png')
 print("\nPlot saved successfully as feasibility_plot.png")
+
+# --- REPORT GENERATION SECTION ---
+report_content = f"""
+ARCHITECTURAL FEASIBILITY REPORT SUMMARY
+----------------------------------------
+
+Project Analysis Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+Total Options Analyzed: {len(df)}
+
+1. EFFICENCY FINDINGS
+The analysis synthesized {len(df)} project options. The most efficient option based on raw construction cost per square foot is:
+
+    OPTION NAME: {best_option_row['Option']}
+    AREA: {best_option_row['Area_SQFT']:,.0f} SQFT
+    TOTAL COST: {best_cost}
+    COST PER SQFT: {best_sqft_cost}
+
+2. ZONING NOTE
+The efficient option ({best_option_row['Option']}) utilizes {best_option_row['Coverage_Percent']}% of the site coverage allowance.
+*For a full visual assessment of all options and constraints, see feasibility_plot.png.*
+
+"""
+
+# Save the report to a plain text file
+with open('feasibility_report.txt', 'w') as f:
+    f.write(report_content)
+
+print("Report saved successfully as feasibility_report.txt")
+# -------------------------------------
+
