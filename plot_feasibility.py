@@ -1,9 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import os
 from datetime import datetime
+import sys
 
-# --- NEW INTERACTIVE USER INPUT SECTION ---
+# --- INTERACTIVE USER INPUT SECTION ---
 print("\n--- Architectural Feasibility Data Entry ---")
 
 options = []
@@ -14,7 +14,7 @@ while True:
         break
 
     try:
-        # User inputs are collected here
+        # User inputs are collected here and validated inside the try block
         area = float(input(f"Enter Area (SQFT) for {option_name}: "))
         cost = float(input(f"Enter Cost (Millions $) for {option_name}: "))
         coverage = float(input(f"Enter Zoning Coverage Percent for {option_name}: "))
@@ -28,11 +28,12 @@ while True:
         })
         print("Option added.\n")
     except ValueError:
-        print("Invalid number input. Please try again.\n")
+        # Handles text input when a number is expected (Error Resilience)
+        print("ERROR: Invalid number input. Please enter numbers only for Area, Cost, and Coverage. Try again.\n")
 
 if not options:
     print("No data entered. Exiting script.")
-    exit()
+    sys.exit()
 
 # 1. Load the data into a DataFrame
 df = pd.DataFrame(options)
@@ -44,8 +45,7 @@ df = pd.DataFrame(options)
 df['Cost_per_SQFT'] = (df['Cost_Millions'] * 1_000_000) / df['Area_SQFT']
 
 # --- REPORT ANALYSIS SECTION ---
-# 2.5 Find the most efficient option (Lowest Cost per SQFT)
-# idxmin() finds the index of the minimum value in the Cost_per_SQFT column
+# Find the most efficient option (Lowest Cost per SQFT)
 best_option_row = df.loc[df['Cost_per_SQFT'].idxmin()]
 
 # Format the key values for the report
@@ -65,7 +65,7 @@ scatter = plt.scatter(
     df['Cost_per_SQFT'],
     s=df['Coverage_Percent'] * 50, # Marker size scales with coverage constraint
     c=df['Cost_per_SQFT'],        # Marker color scales with cost
-    cmap='viridis',               # Color map (shows gradient from low to high cost)
+    cmap='viridis',               # Color map
     alpha=0.7,
     edgecolors='w',
     linewidths=0.5
@@ -84,11 +84,11 @@ for i, row in df.iterrows():
         fontsize=9
     )
 
-# 5. Save the plot (Crucial step for Termux visualization)
+# 5. Save the plot (Visual Deliverable)
 plt.savefig('feasibility_plot.png')
 print("\nPlot saved successfully as feasibility_plot.png")
 
-# --- REPORT GENERATION SECTION ---
+# --- REPORT GENERATION SECTION (Written Deliverable) ---
 report_content = f"""
 ARCHITECTURAL FEASIBILITY REPORT SUMMARY
 ----------------------------------------
@@ -115,5 +115,4 @@ with open('feasibility_report.txt', 'w') as f:
     f.write(report_content)
 
 print("Report saved successfully as feasibility_report.txt")
-# -------------------------------------
 
